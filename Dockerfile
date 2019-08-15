@@ -1,6 +1,15 @@
 # based on rocker/geospatial image
 FROM rocker/geospatial:latest
 
+# install R packages & hugo with user `rstudio`
+#RUN su - rstudio -c "R -e \"install.packages(c('dlnm','gnm','mvmeta','caTools',\
+#  'shinyjs','tmap','car','forestplot','tsModel','lcmm','mapproj','blogdown'));\
+#  blogdown::install_hugo(force=TRUE)\""
+RUN R -e "install.packages(c('dlnm','gnm','mvmeta','caTools','gridExtra','ggpubr',\
+  'shinyjs','car','forestplot','tsModel','lcmm','mapproj','blogdown'));\
+  options(blogdown.hugo.dir='/usr/bin/');blogdown::install_hugo(force=TRUE)"
+#RUN chmod o+rx /usr/bin/hugo
+
 # OPTIONAL
 # set umask for multi-user group sharing
 RUN echo '# Setting umask\n\
@@ -13,15 +22,6 @@ RUN echo '# Setting umask\n\
 # OPTIONAL
 # change docker/rocker r-repos from MRO to CRAN
 #RUN sed -i 's/options(repos = c(CRAN=/#options(repos = c(CRAN=/' usr/local/lib/R/etc/Rprofile.site
-
-# install R packages & hugo with user `rstudio`
-#RUN su - rstudio -c "R -e \"install.packages(c('dlnm','gnm','mvmeta','caTools',\
-#  'shinyjs','tmap','car','forestplot','tsModel','lcmm','mapproj','blogdown'));\
-#  blogdown::install_hugo(force=TRUE)\""
-RUN R -e "install.packages(c('dlnm','gnm','mvmeta','caTools','gridExtra','ggpubr',\
-  'shinyjs','car','forestplot','tsModel','lcmm','mapproj','blogdown'));\
-  options(blogdown.hugo.dir='/usr/bin/');blogdown::install_hugo(force=TRUE)"
-chmod o+rx /usr/bin/hugo
 
 # OPTIONAL
 # mainly changed `default_sweave_engine` to `knitr` and `default_latex_program` to `XeLaTeX`
